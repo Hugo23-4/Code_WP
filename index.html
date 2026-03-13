@@ -1,0 +1,1961 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CodeWP — Proyecto IA para Digitalización · DAW2B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   PRINT / PDF — fondo oscuro forzado al 100%
+═══════════════════════════════════════════════════════════════════ */
+* {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  color-adjust: exact !important;
+}
+@media print {
+  @page { margin: 10mm; size: A4; background: #080C14; }
+  html {
+    background: #080C14 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    background: #080C14 !important;
+    background-color: #080C14 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  .card, .feat-card, .mode-card, .step, .uc-card,
+  .author-card, .plan-card, .stat-card, .rating-item,
+  .info-box, .code-block, .tl-item, .pros-list, .cons-list {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  nav, .print-btn-wrap, .hero-scroll { display: none !important; }
+  .hero { padding-top: 3rem !important; }
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  section { padding: 2rem !important; }
+  .intro-strip { padding: 2rem 0 !important; }
+  .use-case-hero { padding: 2rem 0 !important; }
+  .authors-section { padding: 2rem !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:       #080C14;
+  --bg2:      #0D1220;
+  --bg3:      #111827;
+  --card:     #13192A;
+  --card2:    #1A2236;
+  --border:   rgba(99,131,181,.18);
+  --border2:  rgba(99,131,181,.30);
+  --c1:       #3B82F6;   /* blue */
+  --c2:       #06B6D4;   /* cyan */
+  --c3:       #A78BFA;   /* violet */
+  --c4:       #34D399;   /* green */
+  --c5:       #F59E0B;   /* amber */
+  --danger:   #EF4444;
+  --txt:      #E2E8F0;
+  --txt2:     #94A3B8;
+  --txt3:     #64748B;
+  --mono:     'DM Mono', monospace;
+  --sans:     'Inter', sans-serif;
+  --display:  'Syne', sans-serif;
+  --radius:   14px;
+  --shadow:   0 4px 32px rgba(0,0,0,.5);
+}
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--sans);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+::selection { background: rgba(59,130,246,.35); color: #fff; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--c1); border-radius: 3px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   GRID NOISE BACKGROUND
+═══════════════════════════════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(59,130,246,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(8,12,20,.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  font-family: var(--display);
+  font-weight: 800; font-size: 1.1rem;
+  letter-spacing: -.02em;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.nav-links {
+  display: flex; gap: 2rem; list-style: none;
+}
+.nav-links a {
+  font-size: .8rem; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--txt2);
+  text-decoration: none; transition: color .2s;
+}
+.nav-links a:hover { color: var(--c1); }
+.nav-badge {
+  font-size: .72rem; font-family: var(--mono);
+  background: rgba(59,130,246,.12);
+  color: var(--c1); border: 1px solid rgba(59,130,246,.3);
+  padding: .2rem .7rem; border-radius: 20px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 8rem 2rem 6rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-glow {
+  position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 600px;
+  background: radial-gradient(ellipse, rgba(59,130,246,.18) 0%, rgba(6,182,212,.08) 40%, transparent 70%);
+  pointer-events: none;
+}
+.hero-glow2 {
+  position: absolute; bottom: -100px; left: -200px;
+  width: 500px; height: 400px;
+  background: radial-gradient(ellipse, rgba(167,139,250,.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-family: var(--mono); font-size: .8rem; letter-spacing: .15em;
+  color: var(--c2); text-transform: uppercase; margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: .7rem; justify-content: center;
+  animation: fadeUp .8s ease both;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; width: 40px; height: 1px; background: var(--c2); opacity: .5;
+}
+.hero-title {
+  font-family: var(--display); font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 800; line-height: .95; letter-spacing: -.03em;
+  margin-bottom: 1.5rem;
+  animation: fadeUp .8s .1s ease both;
+}
+.hero-title .line1 { display: block; color: #fff; }
+.hero-title .line2 {
+  display: block;
+  background: linear-gradient(135deg, var(--c1) 0%, var(--c2) 50%, var(--c3) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 1.15rem; color: var(--txt2); max-width: 620px;
+  margin: 0 auto 2.5rem; line-height: 1.8;
+  animation: fadeUp .8s .2s ease both;
+}
+.hero-tags {
+  display: flex; flex-wrap: wrap; gap: .7rem; justify-content: center;
+  margin-bottom: 3rem;
+  animation: fadeUp .8s .3s ease both;
+}
+.tag {
+  font-family: var(--mono); font-size: .75rem; letter-spacing: .05em;
+  padding: .35rem .9rem; border-radius: 20px;
+  border: 1px solid var(--border2); color: var(--txt2);
+  background: rgba(255,255,255,.03);
+}
+.tag.blue  { border-color: rgba(59,130,246,.4); color: var(--c1); background: rgba(59,130,246,.07); }
+.tag.cyan  { border-color: rgba(6,182,212,.4); color: var(--c2); background: rgba(6,182,212,.07); }
+.tag.violet{ border-color: rgba(167,139,250,.4); color: var(--c3); background: rgba(167,139,250,.07); }
+.tag.green { border-color: rgba(52,211,153,.4); color: var(--c4); background: rgba(52,211,153,.07); }
+.tag.amber { border-color: rgba(245,158,11,.4); color: var(--c5); background: rgba(245,158,11,.07); }
+.authors-hero {
+  font-size: .85rem; color: var(--txt3);
+  animation: fadeUp .8s .4s ease both;
+}
+.authors-hero span { color: var(--txt2); font-weight: 500; }
+.hero-scroll {
+  position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: .5rem;
+  font-size: .7rem; font-family: var(--mono); color: var(--txt3); letter-spacing: .1em;
+  animation: bounce 2s infinite;
+}
+.hero-scroll::after {
+  content: '↓'; font-size: 1rem; color: var(--c1);
+}
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════════════════════════════════ */
+section {
+  position: relative; z-index: 1;
+  padding: 6rem 2rem;
+  max-width: 1100px; margin: 0 auto;
+}
+section.full { max-width: 100%; padding: 6rem 0; }
+section.full .inner { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+.section-label {
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .18em;
+  color: var(--c2); text-transform: uppercase;
+  display: flex; align-items: center; gap: .6rem;
+  margin-bottom: 1rem;
+}
+.section-label::before {
+  content: ''; width: 24px; height: 1px; background: var(--c2);
+}
+.section-title {
+  font-family: var(--display); font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800; line-height: 1.1; letter-spacing: -.02em;
+  color: #fff; margin-bottom: 1rem;
+}
+.section-title span {
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.section-sub {
+  font-size: 1rem; color: var(--txt2); max-width: 680px;
+  line-height: 1.8; margin-bottom: 3rem;
+}
+.divider {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CARDS
+═══════════════════════════════════════════════════════════════════ */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  transition: border-color .3s, transform .3s, box-shadow .3s;
+}
+.card:hover {
+  border-color: var(--border2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,.4);
+}
+.card-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; margin-bottom: 1.2rem;
+}
+.card h3 {
+  font-family: var(--display); font-size: 1.1rem; font-weight: 700;
+  margin-bottom: .5rem; color: #fff;
+}
+.card p { font-size: .9rem; color: var(--txt2); line-height: 1.7; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   INTRO STRIP
+═══════════════════════════════════════════════════════════════════ */
+.intro-strip {
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 5rem 2rem;
+}
+.intro-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+}
+.intro-text p { color: var(--txt2); font-size: .95rem; line-height: 1.85; margin-bottom: 1rem; }
+.intro-text p strong { color: var(--txt); }
+.intro-stat-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.4rem;
+}
+.stat-num {
+  font-family: var(--display); font-size: 2rem; font-weight: 800;
+  line-height: 1; margin-bottom: .3rem;
+}
+.stat-label { font-size: .8rem; color: var(--txt3); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TIMELINE
+═══════════════════════════════════════════════════════════════════ */
+.timeline { position: relative; padding-left: 2.5rem; }
+.timeline::before {
+  content: ''; position: absolute; left: 0; top: 8px; bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--c1), var(--c2), var(--c3));
+}
+.tl-item {
+  position: relative; margin-bottom: 2.5rem;
+}
+.tl-item::before {
+  content: ''; position: absolute; left: -2.5rem; top: 6px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--c1); border: 2px solid var(--bg);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.25);
+}
+.tl-version {
+  font-family: var(--mono); font-size: .75rem; color: var(--c2);
+  margin-bottom: .3rem;
+}
+.tl-title {
+  font-family: var(--display); font-size: 1rem; font-weight: 700;
+  color: #fff; margin-bottom: .3rem;
+}
+.tl-desc { font-size: .88rem; color: var(--txt2); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FEATURES GRID
+═══════════════════════════════════════════════════════════════════ */
+.features-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+  gap: 1.5rem;
+}
+.feat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.8rem;
+  transition: border-color .3s, transform .3s;
+  position: relative; overflow: hidden;
+}
+.feat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--c1), transparent);
+  opacity: 0; transition: opacity .3s;
+}
+.feat-card:hover { border-color: rgba(59,130,246,.4); transform: translateY(-4px); }
+.feat-card:hover::before { opacity: 1; }
+.feat-num {
+  font-family: var(--mono); font-size: .7rem; color: var(--txt3);
+  margin-bottom: .8rem;
+}
+.feat-card h3 {
+  font-family: var(--display); font-size: 1rem; font-weight: 700;
+  color: #fff; margin-bottom: .6rem;
+}
+.feat-card p { font-size: .87rem; color: var(--txt2); line-height: 1.7; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TABLE
+═══════════════════════════════════════════════════════════════════ */
+.table-wrap {
+  overflow-x: auto; border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%; border-collapse: collapse; font-size: .87rem;
+}
+thead th {
+  background: var(--card2); color: var(--txt);
+  font-family: var(--display); font-weight: 700; font-size: .78rem;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: .9rem 1.2rem; text-align: left;
+  border-bottom: 1px solid var(--border2);
+}
+tbody td {
+  padding: .85rem 1.2rem; border-bottom: 1px solid var(--border);
+  color: var(--txt2); line-height: 1.55; vertical-align: top;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: rgba(255,255,255,.02); }
+.check { color: var(--c4); font-weight: 700; }
+.cross { color: var(--danger); font-weight: 700; }
+.badge-sm {
+  display: inline-block; font-family: var(--mono); font-size: .68rem;
+  padding: .15rem .5rem; border-radius: 4px; font-weight: 500;
+}
+.badge-yes { background: rgba(52,211,153,.12); color: var(--c4); border: 1px solid rgba(52,211,153,.25); }
+.badge-no  { background: rgba(239,68,68,.1); color: var(--danger); border: 1px solid rgba(239,68,68,.2); }
+.badge-pro { background: rgba(245,158,11,.1); color: var(--c5); border: 1px solid rgba(245,158,11,.2); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CODE BLOCKS
+═══════════════════════════════════════════════════════════════════ */
+.code-block {
+  background: #0D1117;
+  border: 1px solid rgba(99,131,181,.2);
+  border-radius: 12px; overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 24px rgba(0,0,0,.4);
+}
+.code-header {
+  background: rgba(255,255,255,.04);
+  border-bottom: 1px solid rgba(99,131,181,.15);
+  padding: .7rem 1.2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.code-dots { display: flex; gap: .4rem; }
+.code-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.code-dots span:nth-child(1) { background: #FF5F56; }
+.code-dots span:nth-child(2) { background: #FFBD2E; }
+.code-dots span:nth-child(3) { background: #27C93F; }
+.code-lang {
+  font-family: var(--mono); font-size: .72rem; color: var(--txt3);
+  letter-spacing: .08em;
+}
+.code-body {
+  padding: 1.4rem 1.6rem; overflow-x: auto;
+  font-family: var(--mono); font-size: .82rem; line-height: 1.7;
+  color: #ABB2BF;
+}
+.code-body .kw  { color: #C678DD; }   /* keyword */
+.code-body .fn  { color: #61AFEF; }   /* function */
+.code-body .str { color: #98C379; }   /* string */
+.code-body .cm  { color: #5C6370; font-style: italic; } /* comment */
+.code-body .nm  { color: #E5C07B; }   /* name/var */
+.code-body .num { color: #D19A66; }   /* number */
+.code-body .tx  { color: #ABB2BF; }   /* normal text */
+.code-body .hook { color: #E06C75; }  /* hook names */
+
+/* ═══════════════════════════════════════════════════════════════════
+   STEPS
+═══════════════════════════════════════════════════════════════════ */
+.steps { display: flex; flex-direction: column; gap: 1rem; }
+.step {
+  display: flex; gap: 1.2rem; align-items: flex-start;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.3rem 1.5rem;
+  transition: border-color .3s;
+}
+.step:hover { border-color: rgba(59,130,246,.35); }
+.step-num {
+  flex-shrink: 0; width: 32px; height: 32px;
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.3);
+  font-family: var(--mono); font-size: .8rem; color: var(--c1); font-weight: 700;
+  margin-top: .1rem;
+}
+.step-body h4 {
+  font-family: var(--display); font-size: .95rem; font-weight: 700;
+  color: #fff; margin-bottom: .3rem;
+}
+.step-body p { font-size: .88rem; color: var(--txt2); line-height: 1.65; }
+.step-body code {
+  font-family: var(--mono); font-size: .82rem;
+  background: rgba(99,131,181,.12); color: var(--c2);
+  padding: .1rem .45rem; border-radius: 4px;
+}
+.step-body strong { color: var(--txt); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   INFO BOXES
+═══════════════════════════════════════════════════════════════════ */
+.info-box {
+  border-radius: 12px; padding: 1.4rem 1.6rem;
+  margin: 1.5rem 0; display: flex; gap: 1rem; align-items: flex-start;
+}
+.info-box.blue  { background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.25); }
+.info-box.green { background: rgba(52,211,153,.07); border: 1px solid rgba(52,211,153,.22); }
+.info-box.amber { background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.22); }
+.info-box.red   { background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.22); }
+.info-box .icon { font-size: 1.2rem; margin-top: .1rem; flex-shrink: 0; }
+.info-box .content p { font-size: .9rem; color: var(--txt2); line-height: 1.7; margin-bottom: .4rem; }
+.info-box .content p:last-child { margin-bottom: 0; }
+.info-box .content strong { color: var(--txt); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MODES GRID
+═══════════════════════════════════════════════════════════════════ */
+.modes-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap: 1rem;
+}
+.mode-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 1.2rem;
+  transition: border-color .25s, transform .25s;
+}
+.mode-card:hover {
+  border-color: var(--border2); transform: translateY(-2px);
+}
+.mode-name {
+  font-family: var(--display); font-size: .9rem; font-weight: 700;
+  color: #fff; margin-bottom: .35rem;
+}
+.mode-desc { font-size: .8rem; color: var(--txt2); line-height: 1.6; }
+.mode-avail {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: var(--mono); font-size: .68rem;
+  margin-top: .7rem; padding: .2rem .55rem; border-radius: 4px;
+}
+.mode-avail.free  { background: rgba(52,211,153,.1); color: var(--c4); border: 1px solid rgba(52,211,153,.25); }
+.mode-avail.pro   { background: rgba(245,158,11,.1); color: var(--c5); border: 1px solid rgba(245,158,11,.25); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   USE CASES (MAIN)
+═══════════════════════════════════════════════════════════════════ */
+.use-case-hero {
+  background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 6rem 0;
+}
+.uc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+.uc-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 18px; overflow: hidden;
+  transition: border-color .3s, box-shadow .3s;
+}
+.uc-card:hover {
+  border-color: rgba(59,130,246,.4);
+  box-shadow: 0 12px 40px rgba(59,130,246,.1);
+}
+.uc-header {
+  padding: 1.8rem 2rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 1rem;
+}
+.uc-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; flex-shrink: 0;
+}
+.uc-icon.blue  { background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.25); }
+.uc-icon.violet{ background: rgba(167,139,250,.12); border: 1px solid rgba(167,139,250,.25); }
+.uc-meta span  {
+  display: block; font-family: var(--mono); font-size: .7rem;
+  color: var(--c2); letter-spacing: .1em; margin-bottom: .2rem;
+}
+.uc-meta h3 {
+  font-family: var(--display); font-size: 1.05rem; font-weight: 700; color: #fff;
+}
+.uc-body { padding: 1.8rem 2rem; }
+.uc-body p { font-size: .9rem; color: var(--txt2); line-height: 1.75; margin-bottom: 1rem; }
+.uc-section-title {
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .12em;
+  color: var(--txt3); text-transform: uppercase; margin: 1.4rem 0 .7rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   VIDEO CTA
+═══════════════════════════════════════════════════════════════════ */
+.video-cta {
+  background: linear-gradient(135deg, rgba(59,130,246,.15) 0%, rgba(6,182,212,.08) 50%, rgba(167,139,250,.1) 100%);
+  border: 1px solid rgba(59,130,246,.3);
+  border-radius: 20px; padding: 4rem 3rem; text-align: center;
+  position: relative; overflow: hidden;
+  margin: 3rem 0;
+}
+.video-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(59,130,246,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.video-cta-icon {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; margin: 0 auto 1.5rem;
+  box-shadow: 0 0 40px rgba(59,130,246,.4);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{box-shadow:0 0 40px rgba(59,130,246,.4)} 50%{box-shadow:0 0 60px rgba(59,130,246,.7)} }
+.video-cta h3 {
+  font-family: var(--display); font-size: 1.8rem; font-weight: 800;
+  color: #fff; margin-bottom: .8rem; letter-spacing: -.02em;
+}
+.video-cta p { font-size: .95rem; color: var(--txt2); max-width: 540px; margin: 0 auto 2rem; line-height: 1.8; }
+.btn-video {
+  display: inline-flex; align-items: center; gap: .8rem;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  color: #fff; font-family: var(--display); font-size: 1rem; font-weight: 700;
+  padding: .9rem 2.2rem; border-radius: 50px; text-decoration: none;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(59,130,246,.4);
+  transition: transform .2s, box-shadow .2s;
+  letter-spacing: -.01em;
+}
+.btn-video:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(59,130,246,.6);
+}
+.btn-video .play-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem;
+}
+.video-note {
+  margin-top: 1.2rem; font-size: .78rem;
+  font-family: var(--mono); color: var(--txt3);
+  letter-spacing: .05em;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PROS / CONS
+═══════════════════════════════════════════════════════════════════ */
+.pros-cons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.pros-list, .cons-list {
+  background: var(--card); border-radius: var(--radius); padding: 1.8rem;
+  border: 1px solid var(--border);
+}
+.pros-list { border-top: 3px solid var(--c4); }
+.cons-list { border-top: 3px solid var(--danger); }
+.pros-list h4 { color: var(--c4); }
+.cons-list h4 { color: var(--danger); }
+.pros-list h4, .cons-list h4 {
+  font-family: var(--display); font-size: 1rem; font-weight: 700;
+  margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem;
+}
+.check-item, .cross-item {
+  display: flex; gap: .7rem; align-items: flex-start;
+  margin-bottom: .8rem; font-size: .88rem; color: var(--txt2); line-height: 1.6;
+}
+.check-item::before { content: '✓'; color: var(--c4); font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
+.cross-item::before { content: '✕'; color: var(--danger); font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PLANS
+═══════════════════════════════════════════════════════════════════ */
+.plans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+.plan-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 18px; padding: 2rem; text-align: center;
+  position: relative; overflow: hidden;
+  transition: transform .3s, border-color .3s;
+}
+.plan-card.featured {
+  border-color: rgba(59,130,246,.5);
+  background: linear-gradient(180deg, rgba(59,130,246,.08) 0%, var(--card) 100%);
+}
+.plan-card.featured::before {
+  content: 'RECOMENDADO'; position: absolute; top: 1rem; right: 1rem;
+  font-family: var(--mono); font-size: .65rem; letter-spacing: .12em;
+  background: rgba(59,130,246,.2); color: var(--c1);
+  border: 1px solid rgba(59,130,246,.3);
+  padding: .2rem .6rem; border-radius: 4px;
+}
+.plan-card:hover { transform: translateY(-4px); }
+.plan-name {
+  font-family: var(--display); font-size: .85rem; font-weight: 700;
+  color: var(--txt2); text-transform: uppercase; letter-spacing: .1em;
+  margin-bottom: .8rem;
+}
+.plan-price {
+  font-family: var(--display); font-size: 2.5rem; font-weight: 800;
+  color: #fff; line-height: 1; margin-bottom: .3rem;
+}
+.plan-price sup { font-size: 1.2rem; vertical-align: super; }
+.plan-period { font-size: .8rem; color: var(--txt3); margin-bottom: 1.5rem; }
+.plan-features { list-style: none; text-align: left; }
+.plan-features li {
+  font-size: .85rem; color: var(--txt2); padding: .45rem 0;
+  border-bottom: 1px solid var(--border); display: flex; gap: .6rem;
+}
+.plan-features li:last-child { border-bottom: none; }
+.plan-features li::before { content: '›'; color: var(--c1); font-weight: 700; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   COMPARISON
+═══════════════════════════════════════════════════════════════════ */
+.comparison-highlight { background: rgba(59,130,246,.07) !important; }
+.comparison-highlight td:first-child { color: var(--c1) !important; font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   RATING
+═══════════════════════════════════════════════════════════════════ */
+.rating-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1.2rem; }
+.rating-item {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.3rem 1.5rem;
+}
+.rating-label { font-size: .85rem; color: var(--txt2); margin-bottom: .6rem; }
+.rating-bar-bg { background: rgba(255,255,255,.06); border-radius: 4px; height: 6px; margin-bottom: .4rem; }
+.rating-bar { height: 6px; border-radius: 4px; }
+.rating-score { font-family: var(--mono); font-size: .78rem; color: var(--txt3); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   AUTHORS
+═══════════════════════════════════════════════════════════════════ */
+.authors-section {
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 5rem 2rem;
+}
+.authors-inner { max-width: 1100px; margin: 0 auto; }
+.authors-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2.5rem; }
+.author-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 18px; padding: 2.2rem 2.2rem;
+  display: flex; align-items: flex-start; gap: 1.5rem;
+  transition: border-color .3s, transform .3s;
+}
+.author-card:hover {
+  border-color: rgba(59,130,246,.4); transform: translateY(-3px);
+}
+.author-avatar {
+  width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display); font-size: 1.5rem; font-weight: 800;
+  color: #fff;
+}
+.author-avatar.a1 { background: linear-gradient(135deg, var(--c1), var(--c3)); }
+.author-avatar.a2 { background: linear-gradient(135deg, var(--c2), var(--c4)); }
+.author-name {
+  font-family: var(--display); font-size: 1.2rem; font-weight: 800;
+  color: #fff; margin-bottom: .25rem;
+}
+.author-role { font-family: var(--mono); font-size: .72rem; color: var(--c2); letter-spacing: .08em; margin-bottom: .6rem; }
+.author-desc { font-size: .87rem; color: var(--txt2); line-height: 1.7; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════════════ */
+footer {
+  background: var(--bg); border-top: 1px solid var(--border);
+  padding: 3rem 2rem; text-align: center;
+}
+footer p { font-size: .82rem; color: var(--txt3); line-height: 1.8; }
+footer a { color: var(--c1); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════════════════════════ */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+.three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-3 { margin-top: 3rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.accent { color: var(--c1); }
+.accent2 { color: var(--c2); }
+.accent3 { color: var(--c3); }
+.accent4 { color: var(--c4); }
+.mono { font-family: var(--mono); }
+code {
+  font-family: var(--mono); font-size: .85em;
+  background: rgba(99,131,181,.12); color: var(--c2);
+  padding: .1rem .4rem; border-radius: 4px;
+}
+ul.styled { list-style: none; }
+ul.styled li {
+  padding: .4rem 0; color: var(--txt2); font-size: .92rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: .6rem; line-height: 1.6;
+}
+ul.styled li:last-child { border-bottom: none; }
+ul.styled li::before { content: '→'; color: var(--c1); flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════════ */
+@media(max-width:768px){
+  .nav-links { display: none; }
+  .intro-inner, .two-col, .pros-cons-grid, .uc-grid,
+  .authors-grid, .plans-grid { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .intro-stat-grid { grid-template-columns: 1fr 1fr; }
+  .hero-title { font-size: 3rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCROLL ANIMATIONS
+═══════════════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: .1s; }
+.reveal-delay-2 { transition-delay: .2s; }
+.reveal-delay-3 { transition-delay: .3s; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECTION SEPARATOR FULL WIDTH
+═══════════════════════════════════════════════════════════════════ */
+.section-sep {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BOTÓN FLOTANTE DESCARGA PDF
+═══════════════════════════════════════════════════════════════════ */
+.print-btn-wrap {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
+  display: flex; flex-direction: column; align-items: flex-end; gap: .5rem;
+}
+.print-btn {
+  display: flex; align-items: center; gap: .6rem;
+  background: linear-gradient(135deg, #3B82F6, #06B6D4);
+  color: #fff; font-family: 'Syne', sans-serif;
+  font-size: .85rem; font-weight: 700; letter-spacing: -.01em;
+  padding: .75rem 1.4rem; border-radius: 50px; border: none;
+  cursor: pointer; box-shadow: 0 4px 20px rgba(59,130,246,.5);
+  text-decoration: none;
+  transition: transform .2s, box-shadow .2s;
+}
+.print-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(59,130,246,.7);
+}
+.print-btn-note {
+  font-family: 'DM Mono', monospace; font-size: .65rem;
+  color: rgba(255,255,255,.5); text-align: right;
+  background: rgba(8,12,20,.8); padding: .3rem .7rem;
+  border-radius: 6px; backdrop-filter: blur(8px);
+  border: 1px solid rgba(99,131,181,.2);
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">CodeWP · DAW2B</div>
+  <ul class="nav-links">
+    <li><a href="#intro">Intro</a></li>
+    <li><a href="#tecnico">Técnico</a></li>
+    <li><a href="#tutorial">Tutorial</a></li>
+    <li><a href="#funcionalidades">Funciones</a></li>
+    <li><a href="#casos">Casos de Uso</a></li>
+    <li><a href="#reflexion">Reflexión</a></li>
+  </ul>
+  <span class="nav-badge">DAW2B · 2025–2026</span>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════ -->
+<div class="hero" id="top">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-eyebrow">Proyecto IA para Digitalización</div>
+
+  <h1 class="hero-title">
+    <span class="line1">CodeWP</span>
+    <span class="line2">IA para WordPress</span>
+  </h1>
+
+  <p class="hero-sub">
+    Análisis completo de la herramienta de inteligencia artificial especializada en
+    generación de código PHP para el ecosistema WordPress, con casos de uso
+    reales aplicados al desarrollo web.
+  </p>
+
+  <div class="hero-tags">
+    <span class="tag blue">WordPress PHP</span>
+    <span class="tag cyan">WooCommerce</span>
+    <span class="tag violet">API REST</span>
+    <span class="tag green">Custom Post Types</span>
+    <span class="tag amber">IA Especializada</span>
+    <span class="tag">Fine-tuning</span>
+    <span class="tag">Seguridad</span>
+    <span class="tag">Productividad</span>
+  </div>
+
+  <p class="authors-hero">
+    Elaborado por <span>Hugo Pérez Muñoz</span> &amp; <span>Lucia Garrido Chocarro</span>
+  </p>
+
+  <div class="hero-scroll">SCROLL</div>
+</div>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     1. INTRODUCCIÓN
+═══════════════════════════════════════════ -->
+<div class="intro-strip" id="intro">
+  <div class="intro-inner">
+    <div class="intro-text reveal">
+      <div class="section-label">01 — Introducción</div>
+      <h2 class="section-title" style="font-size:2.2rem;">¿Qué es <span>CodeWP</span>?</h2>
+      <p>
+        <strong>CodeWP</strong> es la única plataforma de inteligencia artificial entrenada y optimizada
+        exclusivamente sobre el ecosistema WordPress. No es un asistente genérico —
+        es un experto especializado en PHP, hooks, APIs y estándares de codificación WordPress.
+      </p>
+      <p>
+        Mientras que herramientas como ChatGPT o GitHub Copilot trabajan con un corpus heterogéneo
+        de millones de repositorios, CodeWP fue <strong>fine-tuned</strong> sobre el núcleo de WordPress Core,
+        la documentación oficial, los plugins más populares y miles de snippets validados por
+        la comunidad. El resultado: código correcto, seguro y libre de "alucinaciones".
+      </p>
+      <p>
+        Desarrollada por <strong>WPAI, Inc.</strong>, la herramienta ha evolucionado desde un simple
+        generador de snippets hasta un IDE colaborativo basado en la nube con sandbox
+        de prueba integrado mediante WebAssembly.
+      </p>
+    </div>
+    <div class="intro-stat-grid reveal reveal-delay-1">
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--c1);">45.8%</div>
+        <div class="stat-label">de la web mundial usa WordPress en 2026</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--c2);">28+</div>
+        <div class="stat-label">Modos de IA especializados disponibles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--c4);">~85%</div>
+        <div class="stat-label">Reducción de tiempo en tareas PHP complejas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--c3);">v3.0</div>
+        <div class="stat-label">Versión más reciente con IDE en la nube (2026)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     EVOLUCIÓN HISTÓRICA
+═══════════════════════════════════════════ -->
+<section>
+  <div class="section-label reveal">Línea de tiempo</div>
+  <h2 class="section-title reveal">Evolución de la <span>Plataforma</span></h2>
+  <p class="section-sub reveal">CodeWP ha crecido de generador de snippets a IDE asistido por IA en pocos años.</p>
+
+  <div class="two-col mt-2">
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-version">v1.x — 2022</div>
+        <div class="tl-title">Generador básico de snippets PHP</div>
+        <div class="tl-desc">Automatización de tareas sencillas de personalización WordPress con un único modo.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-version">v2.0 — 2023</div>
+        <div class="tl-title">Modos especializados por plugin</div>
+        <div class="tl-desc">Introducción de contextos específicos para WooCommerce, Elementor, ACF y Divi. Código más preciso según el ecosistema objetivo.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-version">v2.5 — 2024</div>
+        <div class="tl-title">Chat UI conversacional</div>
+        <div class="tl-desc">Interacción iterativa y refinamiento progresivo del código. La IA mantiene el contexto de la sesión completa.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-version">v2.7 — 2024</div>
+        <div class="tl-title">Sistema de Paquetes (Packages)</div>
+        <div class="tl-desc">Gestión de proyectos multi-archivo completos. La IA mantiene coherencia entre múltiples archivos PHP, JS y CSS interdependientes.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-version">v3.0 — 2026</div>
+        <div class="tl-title">IDE en la nube + AI Preview</div>
+        <div class="tl-desc">Sandbox de prueba instantánea con WP Playground (WebAssembly) sin servidor externo. La IA detecta y autocorrige errores en tiempo real.</div>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-1" style="display:flex;flex-direction:column;gap:1rem;">
+      <div class="info-box blue">
+        <div class="icon">💡</div>
+        <div class="content">
+          <p><strong>Diferenciación clave:</strong> CodeWP no compite con ChatGPT ni GitHub Copilot. Compite con un equipo de desarrolladores WordPress senior siempre disponibles, que nunca usan hooks deprecados y siempre escriben código seguro.</p>
+        </div>
+      </div>
+      <div class="info-box green">
+        <div class="icon">🎯</div>
+        <div class="content">
+          <p><strong>Fine-tuning especializado:</strong> el modelo es entrenado continuamente sobre el WordPress Core, la documentación oficial y los plugins más populares, garantizando compatibilidad con las últimas versiones.</p>
+        </div>
+      </div>
+      <div class="info-box amber">
+        <div class="icon">⚡</div>
+        <div class="content">
+          <p><strong>Velocidad:</strong> lo que un desarrollador intermedio tarda 45-60 minutos en escribir (un CPT con Meta Box y seguridad completa), CodeWP lo genera en <strong>~15 segundos</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     2. ANÁLISIS TÉCNICO
+═══════════════════════════════════════════ -->
+<section id="tecnico">
+  <div class="section-label reveal">02 — Análisis Técnico</div>
+  <h2 class="section-title reveal">Arquitectura y <span>Sistema de Modos</span></h2>
+  <p class="section-sub reveal">La potencia de CodeWP reside en su sistema de modos especializados. Cada modo recalibra el contexto de conocimiento de la IA.</p>
+
+  <div class="modes-grid mt-2">
+    <div class="mode-card reveal">
+      <div class="mode-name">WordPress PHP</div>
+      <div class="mode-desc">Arquitectura nativa, hooks, API de opciones, wpdb, WP_Query, Custom Post Types, taxonomías.</div>
+      <div class="mode-avail free">✓ Plan Gratuito</div>
+    </div>
+    <div class="mode-card reveal reveal-delay-1">
+      <div class="mode-name">WooCommerce</div>
+      <div class="mode-desc">Lógica de comercio electrónico, tarifas de envío, precios dinámicos, pasarelas de pago.</div>
+      <div class="mode-avail pro">★ Plan Pro</div>
+    </div>
+    <div class="mode-card reveal reveal-delay-2">
+      <div class="mode-name">Elementor</div>
+      <div class="mode-desc">Widgets personalizados, Dynamic Tags, animaciones CSS/JS, interacción con el constructor.</div>
+      <div class="mode-avail pro">★ Plan Pro</div>
+    </div>
+    <div class="mode-card reveal">
+      <div class="mode-name">Advanced Custom Fields</div>
+      <div class="mode-desc">Campos relacionales, lógica condicional, integración REST, metadatos avanzados estructurados.</div>
+      <div class="mode-avail pro">★ Plan Pro</div>
+    </div>
+    <div class="mode-card reveal reveal-delay-1">
+      <div class="mode-name">SQL / MySQL</div>
+      <div class="mode-desc">Consultas complejas de base de datos, reportes de ventas, exportaciones masivas de datos.</div>
+      <div class="mode-avail pro">★ Plan Pro</div>
+    </div>
+    <div class="mode-card reveal reveal-delay-2">
+      <div class="mode-name">JavaScript / jQuery</div>
+      <div class="mode-desc">AJAX en WordPress, manipulación del DOM, interacciones frontend, API fetch con WP Nonce.</div>
+      <div class="mode-avail pro">★ Plan Pro</div>
+    </div>
+    <div class="mode-card reveal">
+      <div class="mode-name">Divi / Beaver Builder</div>
+      <div class="mode-desc">Módulos personalizados, layouts dinámicos, filtros de tema para constructores populares.</div>
+      <div class="mode-avail pro">★ Plan Pro</div>
+    </div>
+    <div class="mode-card reveal reveal-delay-1">
+      <div class="mode-name">Seguridad</div>
+      <div class="mode-desc">Nonces CSRF, sanitización avanzada, escape de salida, validación de permisos RBAC.</div>
+      <div class="mode-avail pro">★ Plan Pro</div>
+    </div>
+    <div class="mode-card reveal reveal-delay-2">
+      <div class="mode-name">PHP General &amp; Regex</div>
+      <div class="mode-desc">Funciones auxiliares, clases reutilizables, patrones de validación, transformación de strings.</div>
+      <div class="mode-avail pro">★ Plan Pro</div>
+    </div>
+  </div>
+
+  <div class="mt-3 two-col reveal">
+    <div>
+      <h3 style="font-family:var(--display);font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:1rem;">AI Preview — Sandbox WebAssembly</h3>
+      <p style="color:var(--txt2);font-size:.93rem;line-height:1.8;margin-bottom:1rem;">
+        La funcionalidad <strong style="color:var(--txt);">AI Preview</strong> ejecuta el código PHP generado directamente
+        en el navegador sin servidor externo, usando <strong style="color:var(--c1);">WP Playground</strong> (WebAssembly).
+      </p>
+      <ul class="styled">
+        <li>Inyecta el código en un WordPress funcional en milisegundos</li>
+        <li>Detecta errores fatales antes de llegar a producción</li>
+        <li>La IA autocorrige los fallos detectados automáticamente</li>
+        <li>Simula condiciones reales: carrito WC, posts, usuarios</li>
+        <li>Ciclo de iteración sin deploy-test-fix tradicional</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-family:var(--display);font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:1rem;">Sistema de Paquetes Multi-archivo</h3>
+      <p style="color:var(--txt2);font-size:.93rem;line-height:1.8;margin-bottom:1rem;">
+        El sistema de <strong style="color:var(--txt);">Packages</strong> permite a la IA generar y mantener coherencia
+        entre múltiples archivos interdependientes de un plugin completo.
+      </p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">ESTRUCTURA DE PLUGIN GENERADA</span>
+        </div>
+        <div class="code-body" style="font-size:.78rem;">
+<span class="cm">📁 mi-plugin/</span>
+<span class="fn">├── mi-plugin.php</span>        <span class="cm">← Archivo principal</span>
+<span class="fn">├── includes/</span>
+<span class="fn">│   └── class-plugin.php</span>  <span class="cm">← Clase principal</span>
+<span class="fn">├── admin/</span>
+<span class="fn">│   └── admin-page.php</span>    <span class="cm">← Panel admin</span>
+<span class="fn">├── assets/</span>
+<span class="fn">│   ├── js/admin.js</span>       <span class="cm">← JS frontend</span>
+<span class="fn">│   └── css/style.css</span>     <span class="cm">← Estilos</span>
+<span class="fn">└── readme.txt</span>           <span class="cm">← WP.org readme</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     3. TUTORIAL — REGISTRO Y CONFIGURACIÓN
+═══════════════════════════════════════════ -->
+<section id="tutorial" style="background:var(--bg2);max-width:100%;padding:6rem 0;">
+<div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+  <div class="section-label reveal">03 — Tutorial</div>
+  <h2 class="section-title reveal">Registro y <span>Configuración</span></h2>
+  <p class="section-sub reveal">Guía paso a paso para empezar a usar CodeWP desde cero, sin necesidad de tarjeta de crédito.</p>
+
+  <div class="two-col mt-2">
+    <div>
+      <h3 style="font-family:var(--display);font-weight:700;color:#fff;margin-bottom:1.2rem;font-size:1.15rem;">Proceso de Registro</h3>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Acceder a la plataforma</h4>
+            <p>Navega a <code>codewp.ai</code> y haz clic en <strong>"Start for Free"</strong> (esquina superior derecha). Sin coste ni datos de pago.</p>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-1">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Seleccionar método de autenticación</h4>
+            <p>Tres opciones: <strong>GitHub</strong> (recomendado para devs), <strong>Facebook</strong> o <strong>email y contraseña</strong>. GitHub conecta directamente con tus repositorios.</p>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Verificar el email</h4>
+            <p>Si te registras con email, recibirás un enlace de verificación. <strong>Obligatorio</strong> para activar la generación de código. Válido 24 horas.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Seleccionar Plan Gratuito</h4>
+            <p>Activa el <strong>Free Plan</strong> inmediatamente. 20 acciones/mes, 1 proyecto. Suficiente para aprendizaje y práctica académica.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="font-family:var(--display);font-weight:700;color:#fff;margin-bottom:1.2rem;font-size:1.15rem;">Configuración del Entorno</h3>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>Crear el primer proyecto</h4>
+            <p>En el panel lateral → <strong>"New Project"</strong>. Nómbralo con el cliente o sitio (ej: "Web Inmobiliaria 2026"). Opcionalmente vincula un dominio.</p>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-1">
+          <div class="step-num">6</div>
+          <div class="step-body">
+            <h4>Configurar el modo predeterminado</h4>
+            <p>Si tu proyecto es WooCommerce, establece ese modo por defecto para no tener que seleccionarlo en cada sesión.</p>
+          </div>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <div class="step-num">7</div>
+          <div class="step-body">
+            <h4>Instalar WPCode en WordPress</h4>
+            <p>Instala el plugin gratuito <strong>WPCode</strong> en tu sitio. Permite desplegar snippets sin tocar <code>functions.php</code> directamente. Activa/desactiva sin riesgo.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">8</div>
+          <div class="step-body">
+            <h4>Explorar el Dashboard</h4>
+            <p>Familiarízate con: <strong>Create New</strong> (generar), <strong>Snippets</strong> (biblioteca), <strong>Packages</strong> (multi-archivo) y <strong>Chat UI</strong> (consultas).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box blue mt-3 reveal">
+    <div class="icon">🔑</div>
+    <div class="content">
+      <p><strong>Consejo crítico para el vídeo:</strong> al implementar snippets en WPCode, asegúrate de cambiar el "Code Type" a <strong>PHP Snippet</strong> (no HTML). Esto evita el error de "suspicious behaviour" que impide guardar el código. Activa el interruptor <strong>"Active"</strong> antes de guardar.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     4. INGENIERÍA DE PROMPTS
+═══════════════════════════════════════════ -->
+<section>
+  <div class="section-label reveal">04 — Prompts</div>
+  <h2 class="section-title reveal">Ingeniería de <span>Prompts Efectivos</span></h2>
+  <p class="section-sub reveal">La calidad del código generado depende directamente de la calidad del prompt. Un prompt pobre produce código genérico; un prompt técnico produce código de producción.</p>
+
+  <div class="table-wrap reveal mt-2">
+    <table>
+      <thead>
+        <tr>
+          <th>Aspecto</th>
+          <th>❌ Prompt Ineficaz</th>
+          <th>✅ Prompt Efectivo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--txt);">Objetivo</strong></td>
+          <td>Crea un custom post type</td>
+          <td>Crea un CPT 'Property' público, jerárquico, con soporte REST, título, editor y miniaturas</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--txt);">Campos</strong></td>
+          <td>Con campos personalizados</td>
+          <td>Con Meta Box nativa: Precio (input numérico), Habitaciones (numérico), Localización (texto)</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--txt);">Seguridad</strong></td>
+          <td>(no mencionada)</td>
+          <td>Incluye nonces CSRF, sanitize_text_field() y validación con current_user_can()</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--txt);">Hooks</strong></td>
+          <td>(no mencionados)</td>
+          <td>Vincula al hook init con add_action y el guardado con save_post</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--txt);">Contexto</strong></td>
+          <td>(no mencionado)</td>
+          <td>Para WordPress 6.7, PHP 8.2, agencia inmobiliaria con 500+ propiedades</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box green mt-2 reveal">
+    <div class="icon">💡</div>
+    <div class="content">
+      <p><strong>Reglas de oro:</strong> nombra los hooks exactos que esperas, especifica funciones de sanitización por tipo de dato, menciona la versión de PHP y WordPress, divide problemas complejos en prompts iterativos y usa vocabulario técnico de WordPress (CPT, Meta Box, hook, filter, shortcode, REST endpoint).</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     5. FUNCIONALIDADES PRINCIPALES
+═══════════════════════════════════════════ -->
+<section id="funcionalidades">
+  <div class="section-label reveal">05 — Funcionalidades</div>
+  <h2 class="section-title reveal">Funcionalidades <span>Principales</span></h2>
+  <p class="section-sub reveal">Un recorrido por las capacidades core de la plataforma que hacen de CodeWP la herramienta más potente para desarrolladores WordPress.</p>
+
+  <div class="features-grid">
+    <div class="feat-card reveal">
+      <div class="feat-num">01</div>
+      <h3>Generador de Código por Prompts</h3>
+      <p>El núcleo de la plataforma. Describe en lenguaje natural lo que necesitas y recibe código PHP, JS o CSS en menos de 15 segundos. Selecciona el modo correcto y el resultado es siempre específico para el ecosistema elegido.</p>
+    </div>
+    <div class="feat-card reveal reveal-delay-1">
+      <div class="feat-num">02</div>
+      <h3>Chat UI Conversacional</h3>
+      <p>Mentor técnico interactivo. Mantiene el contexto de la sesión completa. Permite hacer preguntas arquitectónicas, pedir explicaciones línea a línea y refinar el código de forma iterativa sin perder el hilo.</p>
+    </div>
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-num">03</div>
+      <h3>AI Preview (Sandbox)</h3>
+      <p>Ejecuta el código generado en un WordPress real dentro del navegador (WebAssembly). Sin servidor, sin riesgo. La IA detecta errores fatales y los corrige antes de que lleguen a tu servidor de producción.</p>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-num">04</div>
+      <h3>Edit &amp; Explain</h3>
+      <p>Selecciona cualquier bloque de código y pide una modificación quirúrgica o una explicación detallada línea a línea. Ideal para aprender los patrones de WordPress mientras usas la herramienta.</p>
+    </div>
+    <div class="feat-card reveal reveal-delay-1">
+      <div class="feat-num">05</div>
+      <h3>Sistema de Paquetes</h3>
+      <p>Genera plugins completos con múltiples archivos interdependientes. La IA mantiene coherencia de variables y namespaces entre el archivo principal, las clases, los assets JS/CSS y el readme.</p>
+    </div>
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-num">06</div>
+      <h3>Integración con WPCode</h3>
+      <p>Despliega snippets directamente en tu WordPress sin acceder al servidor. Activa/desactiva en remoto, define condiciones de ejecución y mantén el historial de versiones de cada fragmento.</p>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-num">07</div>
+      <h3>Biblioteca Comunitaria</h3>
+      <p>Explora snippets verificados y compartidos por la comunidad de desarrolladores. Búsqueda por caso de uso, plugin o tipo de funcionalidad. Ahorra tiempo con soluciones probadas por otros.</p>
+    </div>
+    <div class="feat-card reveal reveal-delay-1">
+      <div class="feat-num">08</div>
+      <h3>Historial de Versiones</h3>
+      <p>Cada snippet guarda todas sus iteraciones anteriores con timestamps. Recupera cualquier versión anterior si una modificación introduce un bug o el cliente pide revertir un cambio.</p>
+    </div>
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-num">09</div>
+      <h3>Refactorización de Código Legacy</h3>
+      <p>Pega código PHP heredado antiguo y pide a la IA que lo refactorice a estándares modernos de WordPress. Detecta antipatrones, funciones obsoletas y vulnerabilidades de seguridad.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     VENTAJAS Y LIMITACIONES
+═══════════════════════════════════════════ -->
+<section style="background:var(--bg2);max-width:100%;padding:6rem 0;">
+<div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+  <div class="section-label reveal">06 — Evaluación</div>
+  <h2 class="section-title reveal">Ventajas y <span>Limitaciones</span> del Plan Gratuito</h2>
+
+  <div class="pros-cons-grid mt-2">
+    <div class="pros-list reveal">
+      <h4>✓ Ventajas</h4>
+      <div class="check-item">Acceso al modo WordPress PHP sin límite de funcionalidades dentro del modo</div>
+      <div class="check-item">20 acciones de generación por mes sin coste económico</div>
+      <div class="check-item">Biblioteca pública de snippets verificados sin restricciones</div>
+      <div class="check-item">Chat UI con el asistente para consultas técnicas generales</div>
+      <div class="check-item">Almacenamiento de snippets en la nube en un proyecto activo</div>
+      <div class="check-item">Acceso a documentación y tutoriales oficiales</div>
+      <div class="check-item">Sin tarjeta de crédito para el registro</div>
+      <div class="check-item">Interfaz completa explorable (botones Pro visibles)</div>
+    </div>
+    <div class="cons-list reveal reveal-delay-1">
+      <h4>✕ Limitaciones</h4>
+      <div class="cross-item">Máximo de 20 acciones/mes (se reinician el día 1 de cada mes)</div>
+      <div class="cross-item">Solo 1 proyecto activo, sin gestión multi-cliente</div>
+      <div class="cross-item">Modos especializados bloqueados: WooCommerce, ACF, SQL, Elementor…</div>
+      <div class="cross-item">Sin Edit &amp; Explain para modificación y explicación de código</div>
+      <div class="cross-item">Sin acceso a AI Preview (sandbox WebAssembly)</div>
+      <div class="cross-item">Sin sistema de Paquetes para proyectos multi-archivo</div>
+      <div class="cross-item">Sin integración directa con WPCode para despliegue automático</div>
+      <div class="cross-item">Sin acceso a modos de auditoría de seguridad avanzada</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--display);font-weight:700;color:#fff;margin:3rem 0 1.5rem;font-size:1.3rem;" class="reveal">Comparativa de Planes</h3>
+  <div class="plans-grid reveal">
+    <div class="plan-card">
+      <div class="plan-name">Free</div>
+      <div class="plan-price"><sup></sup>0€</div>
+      <div class="plan-period">Para siempre</div>
+      <ul class="plan-features">
+        <li>20 acciones / mes</li>
+        <li>1 proyecto activo</li>
+        <li>2 modos básicos</li>
+        <li>Snippets en la nube</li>
+        <li>Chat UI básico</li>
+        <li>Sin AI Preview</li>
+      </ul>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-name">Pro</div>
+      <div class="plan-price"><sup>~</sup>18€</div>
+      <div class="plan-period">al mes (facturación anual)</div>
+      <ul class="plan-features">
+        <li>10.000 acciones / mes</li>
+        <li>4 proyectos activos</li>
+        <li>28+ modos de IA</li>
+        <li>AI Preview (Sandbox)</li>
+        <li>Edit &amp; Explain</li>
+        <li>Integración WPCode</li>
+        <li>Paquetes multi-archivo</li>
+      </ul>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Agency</div>
+      <div class="plan-price"><sup>~</sup>48€</div>
+      <div class="plan-period">al mes (facturación anual)</div>
+      <ul class="plan-features">
+        <li>Acciones ilimitadas</li>
+        <li>Proyectos ilimitados</li>
+        <li>Todo lo del Pro</li>
+        <li>Colaboración en equipo</li>
+        <li>Sites ilimitados</li>
+        <li>Soporte dedicado</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     COMPARATIVA HERRAMIENTAS
+═══════════════════════════════════════════ -->
+<section>
+  <div class="section-label reveal">07 — Comparativa</div>
+  <h2 class="section-title reveal">CodeWP vs <span>Otras Herramientas IA</span></h2>
+  <p class="section-sub reveal">CodeWP no compite en el mismo espacio que GitHub Copilot o ChatGPT. Sacrifica amplitud para ofrecer profundidad técnica superior en WordPress.</p>
+
+  <div class="table-wrap reveal mt-2">
+    <table>
+      <thead>
+        <tr>
+          <th>Criterio</th>
+          <th>CodeWP</th>
+          <th>GitHub Copilot</th>
+          <th>ChatGPT</th>
+          <th>Tabnine</th>
+          <th>V0.dev</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="comparison-highlight">
+          <td><strong>Especialización</strong></td>
+          <td><strong style="color:var(--c1);">WordPress/PHP</strong></td>
+          <td>Universal</td>
+          <td>Universal</td>
+          <td>Universal</td>
+          <td>React/UI</td>
+        </tr>
+        <tr>
+          <td><strong>Precisión en WP</strong></td>
+          <td><span class="badge-sm badge-yes">Muy Alta</span></td>
+          <td><span class="badge-sm badge-pro">Media</span></td>
+          <td><span class="badge-sm badge-pro">Media-baja</span></td>
+          <td><span class="badge-sm badge-no">Baja</span></td>
+          <td><span class="badge-sm badge-no">N/A</span></td>
+        </tr>
+        <tr>
+          <td><strong>Alucinaciones WP</strong></td>
+          <td><span class="badge-sm badge-yes">Mínimas</span></td>
+          <td><span class="badge-sm badge-no">Frecuentes</span></td>
+          <td><span class="badge-sm badge-no">Frecuentes</span></td>
+          <td><span class="badge-sm badge-no">Frecuentes</span></td>
+          <td><span class="badge-sm badge-no">N/A</span></td>
+        </tr>
+        <tr>
+          <td><strong>Entorno de prueba</strong></td>
+          <td>AI Preview (WP)</td>
+          <td>En el IDE</td>
+          <td>Manual</td>
+          <td>En el IDE</td>
+          <td>Preview integrado</td>
+        </tr>
+        <tr>
+          <td><strong>Modos especializados</strong></td>
+          <td><strong style="color:var(--c4);">28+ modos</strong></td>
+          <td>No</td>
+          <td>No</td>
+          <td>No</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><strong>Plan gratuito</strong></td>
+          <td>20 acc/mes</td>
+          <td>Limitado</td>
+          <td>GPT-3.5 gratis</td>
+          <td>Plan gratuito</td>
+          <td>Créditos</td>
+        </tr>
+        <tr>
+          <td><strong>Soporte PHP backend</strong></td>
+          <td><span class="badge-sm badge-yes">Excelente</span></td>
+          <td><span class="badge-sm badge-yes">Bueno</span></td>
+          <td><span class="badge-sm badge-yes">Bueno</span></td>
+          <td><span class="badge-sm badge-yes">Bueno</span></td>
+          <td><span class="badge-sm badge-no">No</span></td>
+        </tr>
+        <tr>
+          <td><strong>Generación de UI</strong></td>
+          <td><span class="badge-sm badge-pro">Básica</span></td>
+          <td><span class="badge-sm badge-no">No</span></td>
+          <td><span class="badge-sm badge-pro">Limitada</span></td>
+          <td><span class="badge-sm badge-no">No</span></td>
+          <td><span class="badge-sm badge-yes">Excelente</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     CASOS DE USO
+═══════════════════════════════════════════ -->
+<div id="casos" class="use-case-hero">
+<div style="max-width:1100px;margin:0 auto;padding:0 2rem 0;">
+  <div class="section-label reveal">08 — Casos de Uso</div>
+  <h2 class="section-title reveal">Demostración <span>Práctica</span></h2>
+  <p class="section-sub reveal">Dos casos de uso reales que demuestran la aplicación de CodeWP en proyectos de desarrollo web. El código funcional fue generado íntegramente por la IA y verificado en un WordPress real.</p>
+</div>
+
+<div class="uc-grid">
+
+  <!-- CASO 1 -->
+  <div class="uc-card reveal">
+    <div class="uc-header">
+      <div class="uc-icon blue">🏠</div>
+      <div class="uc-meta">
+        <span>CASO DE USO 01</span>
+        <h3>Custom Post Type — Web Inmobiliaria</h3>
+      </div>
+    </div>
+    <div class="uc-body">
+      <p><strong style="color:var(--txt);">Contexto:</strong> Una agencia inmobiliaria necesita gestionar propiedades con campos específicos (precio, habitaciones, localización). En lugar de instalar plugins pesados como ACF o CPT UI, CodeWP genera el código PHP nativo completo con toda la seguridad incluida.</p>
+
+      <div class="uc-section-title">PROMPT ENVIADO A CODEWP</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">PROMPT — WordPress PHP Mode</span>
+        </div>
+        <div class="code-body" style="font-size:.78rem;color:var(--txt2);">
+Registra un CPT llamado 'property', público, jerárquico, con soporte REST.
+Añade Meta Box nativa con campos: Precio (número), Habitaciones (número),
+Localización (texto). Incluye nonces CSRF, sanitización y current_user_can().</div>
+      </div>
+
+      <div class="uc-section-title">CÓDIGO GENERADO POR CODEWP</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">PHP — functions.php / WPCode Snippet</span>
+        </div>
+        <div class="code-body" style="font-size:.76rem;">
+<span class="cm">// 1. Registrar el Custom Post Type 'Property'</span>
+<span class="hook">add_action</span>( <span class="str">'init'</span>, <span class="fn">'registrar_cpt_propiedad'</span> );
+<span class="kw">function</span> <span class="fn">registrar_cpt_propiedad</span>() {
+    <span class="kw">$args</span> = <span class="fn">array</span>(
+        <span class="str">'public'</span>       => <span class="kw">true</span>,
+        <span class="str">'label'</span>        => <span class="str">'Propiedades'</span>,
+        <span class="str">'show_in_rest'</span> => <span class="kw">true</span>, <span class="cm">// Editor de bloques moderno</span>
+        <span class="str">'supports'</span>     => <span class="fn">array</span>( <span class="str">'title'</span>, <span class="str">'editor'</span> ),
+    );
+    <span class="fn">register_post_type</span>( <span class="str">'property'</span>, <span class="kw">$args</span> );
+}
+
+<span class="cm">// 2. Añadir Meta Box en el editor</span>
+<span class="hook">add_action</span>( <span class="str">'add_meta_boxes'</span>, <span class="fn">'anadir_metabox_propiedad'</span> );
+<span class="kw">function</span> <span class="fn">anadir_metabox_propiedad</span>() {
+    <span class="fn">add_meta_box</span>(
+        <span class="str">'propiedad_meta_box'</span>,
+        <span class="str">'Detalles de la Propiedad'</span>,
+        <span class="str">'mostrar_metabox_propiedad'</span>,
+        <span class="str">'property'</span>, <span class="str">'normal'</span>, <span class="str">'high'</span>
+    );
+}
+
+<span class="cm">// 3. HTML de los campos con seguridad nonce</span>
+<span class="kw">function</span> <span class="fn">mostrar_metabox_propiedad</span>( <span class="kw">$post</span> ) {
+    <span class="fn">wp_nonce_field</span>( <span class="str">'guardar_metadatos_propiedad'</span>, <span class="str">'propiedad_nonce'</span> );
+    <span class="kw">$precio</span>       = <span class="fn">get_post_meta</span>( <span class="kw">$post</span>-><span class="nm">ID</span>, <span class="str">'_precio_propiedad'</span>, <span class="kw">true</span> );
+    <span class="kw">$habitaciones</span> = <span class="fn">get_post_meta</span>( <span class="kw">$post</span>-><span class="nm">ID</span>, <span class="str">'_habitaciones_propiedad'</span>, <span class="kw">true</span> );
+    <span class="kw">$localizacion</span> = <span class="fn">get_post_meta</span>( <span class="kw">$post</span>-><span class="nm">ID</span>, <span class="str">'_localizacion_propiedad'</span>, <span class="kw">true</span> );
+    <span class="cm">// → inputs para precio, habitaciones y localización con esc_attr()</span>
+}
+
+<span class="cm">// 4. Guardar datos de forma segura</span>
+<span class="hook">add_action</span>( <span class="str">'save_post'</span>, <span class="fn">'guardar_metadatos_propiedad'</span> );
+<span class="kw">function</span> <span class="fn">guardar_metadatos_propiedad</span>( <span class="kw">$post_id</span> ) {
+    <span class="cm">// Verificar nonce, no-autosave y permisos</span>
+    <span class="kw">if</span> ( !<span class="fn">wp_verify_nonce</span>( <span class="kw">$_POST</span>[<span class="str">'propiedad_nonce'</span>], <span class="str">'...'</span> ) ) <span class="kw">return</span>;
+    <span class="kw">if</span> ( <span class="fn">defined</span>(<span class="str">'DOING_AUTOSAVE'</span>) && <span class="nm">DOING_AUTOSAVE</span> ) <span class="kw">return</span>;
+    <span class="kw">if</span> ( !<span class="fn">current_user_can</span>( <span class="str">'edit_post'</span>, <span class="kw">$post_id</span> ) ) <span class="kw">return</span>;
+    <span class="cm">// Sanitizar y guardar con update_post_meta()</span>
+    <span class="fn">update_post_meta</span>( <span class="kw">$post_id</span>, <span class="str">'_precio_propiedad'</span>,
+        <span class="fn">sanitize_text_field</span>( <span class="kw">$_POST</span>[<span class="str">'precio_propiedad'</span>] ) );
+}</div>
+      </div>
+
+      <div class="uc-section-title">CÓMO IMPLEMENTARLO EN WORDPRESS</div>
+      <div class="steps" style="gap:.7rem;">
+        <div class="step" style="padding:1rem 1.2rem;">
+          <div class="step-num" style="width:26px;height:26px;font-size:.72rem;">1</div>
+          <div class="step-body"><p>En WordPress → <strong>WPCode</strong> → <strong>"+ Add Snippet"</strong> → <strong>"Add Your Custom Code"</strong></p></div>
+        </div>
+        <div class="step" style="padding:1rem 1.2rem;">
+          <div class="step-num" style="width:26px;height:26px;font-size:.72rem;">2</div>
+          <div class="step-body"><p>Ponle título (ej: "Caso 1 - Propiedades"). Cambia <strong>"Code Type" a PHP Snippet</strong> (¡crítico!)</p></div>
+        </div>
+        <div class="step" style="padding:1rem 1.2rem;">
+          <div class="step-num" style="width:26px;height:26px;font-size:.72rem;">3</div>
+          <div class="step-body"><p>Pega el código. Activa <strong>"Active"</strong> y guarda. Aparecerá <strong>"Propiedades"</strong> en el menú lateral.</p></div>
+        </div>
+      </div>
+
+      <div class="info-box green" style="margin-top:1rem;">
+        <div class="icon">⏱️</div>
+        <div class="content">
+          <p><strong>Tiempo manual:</strong> 45-60 min · <strong>Con CodeWP:</strong> ~15 seg + 10 min revisión · <strong>Ahorro: ~85%</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 2 -->
+  <div class="uc-card reveal reveal-delay-1">
+    <div class="uc-header">
+      <div class="uc-icon violet">🔌</div>
+      <div class="uc-meta">
+        <span>CASO DE USO 02</span>
+        <h3>Endpoint Personalizado en la API REST</h3>
+      </div>
+    </div>
+    <div class="uc-body">
+      <p><strong style="color:var(--txt);">Contexto:</strong> Es muy común usar WordPress como base de datos conectada a una app móvil. Para enviar datos personalizados a esa aplicación necesitamos crear una ruta en la API REST. Hacerlo manualmente requiere conocer la documentación técnica a fondo — CodeWP lo genera en segundos.</p>
+
+      <div class="uc-section-title">PROMPT ENVIADO A CODEWP</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">PROMPT — WordPress PHP Mode</span>
+        </div>
+        <div class="code-body" style="font-size:.78rem;color:var(--txt2);">
+Crea un endpoint personalizado en la API REST de WordPress con la ruta
+'mi-agencia/v1/saludo'. Método GET, acceso público, que devuelva un JSON
+con estado, mensaje y tecnología usada. Usa rest_ensure_response().</div>
+      </div>
+
+      <div class="uc-section-title">CÓDIGO GENERADO POR CODEWP</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">PHP — API REST Endpoint</span>
+        </div>
+        <div class="code-body" style="font-size:.76rem;">
+<span class="cm">// 1. Registrar la nueva ruta al inicializarse</span>
+<span class="hook">add_action</span>( <span class="str">'rest_api_init'</span>, <span class="fn">'registrar_mi_endpoint_personalizado'</span> );
+
+<span class="kw">function</span> <span class="fn">registrar_mi_endpoint_personalizado</span>() {
+    <span class="fn">register_rest_route</span>( <span class="str">'mi-agencia/v1'</span>, <span class="str">'/saludo'</span>, <span class="fn">array</span>(
+        <span class="str">'methods'</span>             => <span class="nm">WP_REST_Server</span>::<span class="nm">READABLE</span>, <span class="cm">// GET</span>
+        <span class="str">'callback'</span>            => <span class="str">'respuesta_mi_endpoint'</span>,
+        <span class="str">'permission_callback'</span> => <span class="str">'__return_true'</span> <span class="cm">// Público</span>
+    ) );
+}
+
+<span class="cm">// 2. Función que devuelve los datos en JSON</span>
+<span class="kw">function</span> <span class="fn">respuesta_mi_endpoint</span>( <span class="kw">$request</span> ) {
+    <span class="kw">$datos</span> = <span class="fn">array</span>(
+        <span class="str">'estado'</span>      => <span class="num">200</span>,
+        <span class="str">'mensaje'</span>     => <span class="str">'Conexión con la BBDD de la inmobiliaria: éxito.'</span>,
+        <span class="str">'tecnologia'</span>  => <span class="str">'Endpoint generado mediante Inteligencia Artificial'</span>
+    );
+    <span class="kw">return</span> <span class="fn">rest_ensure_response</span>( <span class="kw">$datos</span> );
+}</div>
+      </div>
+
+      <div class="uc-section-title">CÓMO IMPLEMENTARLO Y VERIFICARLO</div>
+      <div class="steps" style="gap:.7rem;">
+        <div class="step" style="padding:1rem 1.2rem;">
+          <div class="step-num" style="width:26px;height:26px;font-size:.72rem;">1</div>
+          <div class="step-body"><p><strong>WPCode</strong> → <strong>"+ Add Snippet"</strong> → <strong>"Add Your Custom Code"</strong>. Título: "Caso 2 - API REST"</p></div>
+        </div>
+        <div class="step" style="padding:1rem 1.2rem;">
+          <div class="step-num" style="width:26px;height:26px;font-size:.72rem;">2</div>
+          <div class="step-body"><p>Cambia <strong>"Code Type" a PHP Snippet</strong>. Pega el código. Activa <strong>"Active"</strong> y guarda.</p></div>
+        </div>
+        <div class="step" style="padding:1rem 1.2rem;">
+          <div class="step-num" style="width:26px;height:26px;font-size:.72rem;">3</div>
+          <div class="step-body"><p>Abre el navegador y ve a: <code>tuwordpress.com/wp-json/mi-agencia/v1/saludo</code>. Verás el JSON en pantalla.</p></div>
+        </div>
+      </div>
+
+      <div class="info-box green" style="margin-top:1rem;">
+        <div class="icon">⏱️</div>
+        <div class="content">
+          <p><strong>Tiempo manual:</strong> 60-90 min · <strong>Con CodeWP:</strong> ~12 seg + 5 min revisión · <strong>Ahorro: ~90%</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /uc-grid -->
+
+<!-- VIDEO CTA -->
+<div style="max-width:1100px;margin:3rem auto 0;padding:0 2rem;">
+  <div class="video-cta reveal">
+    <div class="video-cta-icon">▶</div>
+    <h3>Demostración Completa en Vídeo</h3>
+    <p>
+      Los dos casos de uso se demuestran en detalle en nuestro vídeo de presentación.
+      Podrás ver en tiempo real cómo CodeWP genera el código, cómo lo implementamos
+      paso a paso en WordPress con WPCode, y los resultados funcionando en un sitio real.
+    </p>
+    <a href="https://www.youtube.com/watch?v=ENLACE_VIDEO" target="_blank" class="btn-video">
+      <span class="play-icon">▶</span>
+      Ver Presentación en Vídeo
+    </a>
+    <p class="video-note">DURACIÓN MÁXIMA: 15 MIN · FORMATO MP4 · HUGO PÉREZ &amp; LUCIA GARRIDO</p>
+  </div>
+</div>
+</div><!-- /inner -->
+
+<div class="section-sep" style="margin-top:3rem;"></div>
+
+<!-- ═══════════════════════════════════════════
+     SEGURIDAD
+═══════════════════════════════════════════ -->
+<section>
+  <div class="section-label reveal">09 — Seguridad</div>
+  <h2 class="section-title reveal">Buenas Prácticas de <span>Seguridad</span></h2>
+  <p class="section-sub reveal">El uso de IA para generar código no elimina la responsabilidad del desarrollador. La automatización amplifica el conocimiento técnico, para bien o para mal.</p>
+
+  <div class="three-col mt-2">
+    <div class="card reveal">
+      <div class="card-icon" style="background:rgba(239,68,68,.12);color:var(--danger);">🔒</div>
+      <h3>Nunca envíes credenciales</h3>
+      <p>Al formular prompts, usa placeholders en lugar de contraseñas, tokens API o claves reales. La comunicación con el servidor de CodeWP pasa por Internet.</p>
+    </div>
+    <div class="card reveal reveal-delay-1">
+      <div class="card-icon" style="background:rgba(245,158,11,.12);color:var(--c5);">🔍</div>
+      <h3>Audita antes de producción</h3>
+      <p>Aunque CodeWP genera código generalmente seguro, ningún sistema garantiza perfección. Revisa siempre la sanitización, los permisos y el manejo de datos sensibles.</p>
+    </div>
+    <div class="card reveal reveal-delay-2">
+      <div class="card-icon" style="background:rgba(52,211,153,.12);color:var(--c4);">🧪</div>
+      <h3>Staging primero</h3>
+      <p>Implementa siempre en entorno de staging antes de producción. Usa AI Preview para pruebas rápidas y WPCode en staging para validación real antes del deploy final.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon" style="background:rgba(59,130,246,.12);color:var(--c1);">📌</div>
+      <h3>Verifica hooks</h3>
+      <p>Comprueba que los hooks generados no estén deprecados en tu versión de WordPress. CodeWP usa los modernos, pero si tu WordPress es antiguo puede haber incompatibilidades.</p>
+    </div>
+    <div class="card reveal reveal-delay-1">
+      <div class="card-icon" style="background:rgba(167,139,250,.12);color:var(--c3);">📁</div>
+      <h3>Control de versiones</h3>
+      <p>Usa Git para versionar todos los snippets implementados. Incluye el prompt que originó cada fragmento en el mensaje de commit para trazabilidad completa.</p>
+    </div>
+    <div class="card reveal reveal-delay-2">
+      <div class="card-icon" style="background:rgba(6,182,212,.12);color:var(--c2);">🧠</div>
+      <h3>Comprende el código</h3>
+      <p>El desarrollador que implementa código generado por IA tiene la responsabilidad de comprenderlo completamente. El desconocimiento no exime de responsabilidad.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     REFLEXIÓN CRÍTICA
+═══════════════════════════════════════════ -->
+<section id="reflexion" style="background:var(--bg2);max-width:100%;padding:6rem 0;">
+<div style="max-width:1100px;margin:0 auto;padding:0 2rem;">
+  <div class="section-label reveal">10 — Reflexión Crítica</div>
+  <h2 class="section-title reveal">Análisis y <span>Conclusiones</span></h2>
+  <p class="section-sub reveal">Una evaluación objetiva de CodeWP: qué hace bien, dónde falla y qué significa para el futuro del desarrollador WordPress.</p>
+
+  <div class="two-col mt-2">
+    <div class="reveal">
+      <h3 style="font-family:var(--display);font-weight:700;color:#fff;margin-bottom:1.5rem;font-size:1.15rem;">Métricas de Productividad Reales</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Tarea</th><th>Manual</th><th>Con IA</th><th>Ahorro</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>CPT + Meta Box + Seguridad</td><td>~55 min</td><td>~25 min</td><td style="color:var(--c4)">~85%</td></tr>
+            <tr><td>Endpoint API REST</td><td>~75 min</td><td>~17 min</td><td style="color:var(--c4)">~90%</td></tr>
+            <tr><td>Filtro envíos WooCommerce</td><td>~80 min</td><td>~20 min</td><td style="color:var(--c4)">~88%</td></tr>
+            <tr><td>Shortcode con caché</td><td>~40 min</td><td>~18 min</td><td style="color:var(--c4)">~80%</td></tr>
+            <tr><td>Plugin básico completo</td><td>~6 horas</td><td>~2 horas</td><td style="color:var(--c4)">~65%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:.8rem;color:var(--txt3);margin-top:.7rem;">* El tiempo "Con IA" incluye la fase de revisión y validación del código. No es opcional.</p>
+    </div>
+
+    <div class="reveal reveal-delay-1">
+      <h3 style="font-family:var(--display);font-weight:700;color:#fff;margin-bottom:1.5rem;font-size:1.15rem;">Valoración Global</h3>
+      <div class="rating-grid" style="grid-template-columns:1fr;">
+        <div class="rating-item">
+          <div class="rating-label">Precisión del código WordPress</div>
+          <div class="rating-bar-bg"><div class="rating-bar" style="width:90%;background:linear-gradient(90deg,var(--c1),var(--c2));"></div></div>
+          <div class="rating-score">9 / 10</div>
+        </div>
+        <div class="rating-item">
+          <div class="rating-label">Sistema de modos especializados</div>
+          <div class="rating-bar-bg"><div class="rating-bar" style="width:100%;background:linear-gradient(90deg,var(--c2),var(--c4));"></div></div>
+          <div class="rating-score">10 / 10</div>
+        </div>
+        <div class="rating-item">
+          <div class="rating-label">Calidad de seguridad generada</div>
+          <div class="rating-bar-bg"><div class="rating-bar" style="width:90%;background:linear-gradient(90deg,var(--c4),var(--c1));"></div></div>
+          <div class="rating-score">9 / 10</div>
+        </div>
+        <div class="rating-item">
+          <div class="rating-label">Valor del plan gratuito</div>
+          <div class="rating-bar-bg"><div class="rating-bar" style="width:60%;background:linear-gradient(90deg,var(--c5),var(--c1));"></div></div>
+          <div class="rating-score">6 / 10</div>
+        </div>
+        <div class="rating-item">
+          <div class="rating-label">Soporte para diseño visual CSS</div>
+          <div class="rating-bar-bg"><div class="rating-bar" style="width:40%;background:linear-gradient(90deg,var(--danger),var(--c5));"></div></div>
+          <div class="rating-score">4 / 10</div>
+        </div>
+        <div class="rating-item">
+          <div class="rating-label"><strong>PUNTUACIÓN GLOBAL</strong></div>
+          <div class="rating-bar-bg"><div class="rating-bar" style="width:81%;background:linear-gradient(90deg,var(--c1),var(--c3));"></div></div>
+          <div class="rating-score"><strong>8.1 / 10</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box amber mt-3 reveal">
+    <div class="icon">⚠️</div>
+    <div class="content">
+      <p><strong>Limitaciones estructurales identificadas:</strong> el diseño visual de Meta Boxes y páginas admin carece de estilos CSS refinados. WooCommerce puede necesitar invalidación de caché adicional. Los prompts ambiguos producen código genérico. No tiene acceso al código fuente de plugins premium.</p>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:2.5rem;margin-top:2rem;border-left:4px solid var(--c1);" class="reveal">
+    <div class="section-label" style="margin-bottom:1rem;">Reflexión Final</div>
+    <p style="font-size:1.05rem;color:var(--txt);line-height:1.9;margin-bottom:1rem;">
+      La digitalización absoluta consolida al desarrollador de aplicaciones web <strong>no como un mero codificador de instrucciones, sino como el conductor orquestal indispensable de la automatización inteligente.</strong>
+    </p>
+    <p style="font-size:.93rem;color:var(--txt2);line-height:1.85;margin-bottom:1rem;">
+      La IA que genera código automáticamente <strong style="color:var(--txt);">eleva el valor del conocimiento técnico profundo</strong>, no lo deprecia. El desarrollador que comprende la arquitectura interna de WordPress, domina el sistema de hooks y conoce las implicaciones de seguridad, puede guiar a la IA con precisión quirúrgica.
+    </p>
+    <p style="font-size:.93rem;color:var(--txt2);line-height:1.85;">
+      <strong style="color:var(--c1);">CodeWP es extraordinariamente potente en las manos del desarrollador que ya sabe lo que necesita.</strong> Es una trampa en las manos del que usa la IA para evitar aprender. La máquina redacta el código; el humano define la arquitectura, valida la seguridad y toma las decisiones que determinan si el software es robusto, mantenible y escalable.
+    </p>
+  </div>
+</div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     REFERENCIAS
+═══════════════════════════════════════════ -->
+<section>
+  <div class="section-label reveal">11 — Bibliografía</div>
+  <h2 class="section-title reveal"><span>Referencias</span> y Fuentes</h2>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem;" class="reveal">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--txt3);margin-bottom:.4rem;">[1]</div>
+      <div style="font-size:.87rem;color:var(--txt2);">Proyecto IA para Digitalización DAW2B — <em>Documento oficial de la práctica. Curso 2025-2026.</em></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--txt3);margin-bottom:.4rem;">[2]</div>
+      <div style="font-size:.87rem;color:var(--txt2);">Gold Penguin — <em>CodeWP 2026 Reviews &amp; Information.</em> goldpenguin.org/tools/codewp</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--txt3);margin-bottom:.4rem;">[3]</div>
+      <div style="font-size:.87rem;color:var(--txt2);">WP Mayor — <em>CodeWP: AI-Powered WordPress Solutions.</em> wpmayor.com</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--txt3);margin-bottom:.4rem;">[4]</div>
+      <div style="font-size:.87rem;color:var(--txt2);">WPAI — <em>CodeWP 3.0 Is On The Way — Roadmap oficial.</em> wpai.co</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--txt3);margin-bottom:.4rem;">[5]</div>
+      <div style="font-size:.87rem;color:var(--txt2);">cmsMinds — <em>Best WordPress AI Code Generators for 2026.</em> cmsminds.com</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--txt3);margin-bottom:.4rem;">[6]</div>
+      <div style="font-size:.87rem;color:var(--txt2);">Elegant Themes — <em>Best WordPress AI Code Generators & How to Code with AI.</em> elegantthemes.com</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--txt3);margin-bottom:.4rem;">[7]</div>
+      <div style="font-size:.87rem;color:var(--txt2);">CodeWP Help Center — <em>Generator Modes documentation.</em> codewp.tawk.help</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--txt3);margin-bottom:.4rem;">[8]</div>
+      <div style="font-size:.87rem;color:var(--txt2);">WordPress Foundation — <em>WP Playground / WebAssembly.</em> playground.wordpress.net</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--txt3);margin-bottom:.4rem;">[9]</div>
+      <div style="font-size:.87rem;color:var(--txt2);">WisdmLabs — <em>AI-Powered WordPress Developer Tools in 2026.</em> wisdmlabs.com</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--txt3);margin-bottom:.4rem;">[10]</div>
+      <div style="font-size:.87rem;color:var(--txt2);">Learn WordPress — <em>Custom Post Types &amp; Custom Post Type Data.</em> learn.wordpress.org</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══════════════════════════════════════════
+     AUTHORS
+═══════════════════════════════════════════ -->
+<div class="authors-section">
+  <div class="authors-inner">
+    <div class="section-label reveal">Autores</div>
+    <h2 class="section-title reveal">Elaborado por</h2>
+    <div class="authors-grid">
+      <div class="author-card reveal">
+        <div class="author-avatar a1">HP</div>
+        <div>
+          <div class="author-name">Hugo Pérez Muñoz</div>
+          <div class="author-role">DAW2B · 2025–2026</div>
+          <div class="author-desc">Estudiante de Desarrollo de Aplicaciones Web. Investigación técnica sobre CodeWP, análisis de la arquitectura del modelo de IA y desarrollo de los casos de uso de la API REST.</div>
+        </div>
+      </div>
+      <div class="author-card reveal reveal-delay-1">
+        <div class="author-avatar a2">LG</div>
+        <div>
+          <div class="author-name">Lucia Garrido Chocarro</div>
+          <div class="author-role">DAW2B · 2025–2026</div>
+          <div class="author-desc">Estudiante de Desarrollo de Aplicaciones Web. Implementación práctica del tutorial, documentación del caso de uso del Custom Post Type y análisis crítico de la herramienta.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer>
+  <p>
+    <strong>Proyecto IA para Digitalización · DAW2B · Curso 2025–2026</strong><br>
+    Herramienta analizada: <a href="https://codewp.ai" target="_blank">CodeWP</a> — IA especializada en WordPress.<br>
+    Elaborado por <strong>Hugo Pérez Muñoz</strong> y <strong>Lucia Garrido Chocarro</strong><br>
+    <span style="font-size:.75rem;color:var(--txt3);">Este documento es de carácter académico. Los fragmentos de código son ejemplos ilustrativos generados con CodeWP con fines formativos.</span>
+  </p>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════ -->
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Active nav link
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current ? 'var(--c1)' : '';
+  });
+});
+</script>
+
+
+<!-- BOTÓN FLOTANTE PDF -->
+<div class="print-btn-wrap">
+  <span class="print-btn-note">Activa "Gráficos de fondo" en el diálogo de impresión</span>
+  <button class="print-btn" onclick="window.print()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Descargar PDF
+  </button>
+</div>
+
+</body>
+</html>
